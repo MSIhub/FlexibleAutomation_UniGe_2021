@@ -1,10 +1,12 @@
-\documentclass[a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 
 %%%%%%%% CREATE DOCUMENT STRUCTURE %%%%%%%%
 %% Language and font encodings
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz,lipsum,lmodern}
 %\usepackage{subfig}
 
 %% Sets page size and margins
@@ -32,19 +34,15 @@
 
 %%%% Title Page
 \begin{titlepage}
-
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 							% horizontal line and its thickness
 \center 
- 
 % University
 \textsc{\LARGE University of Genoa}\\[1cm]
-
 % Document info
 \textsc{\Large Flexible Automation}\\[0.2cm]
 \textsc{\large Code: 66044}\\[1cm] 										% Course Code
-\textsc{\large Academic Year: 2021/22}\\[1cm] 										% Course Code
-\HRule \\[0.8cm]
-{ \huge \bfseries Assignment: Virtual Prototyping of a Robotics Manufacturing cell with CoppeliaSim}\\[0.7cm]								% Assignment
+\textsc{\large Academic Year: 2021/22}\\[1cm] 										\HRule \\[0.8cm]
+{ \huge \bfseries Assignment: Virtual Prototyping of a Robotics Work Cell with CoppeliaSim}\\[0.7cm]								% Assignment
 \HRule \\[1.5cm]
 \large
 \emph{Topic 5: Simulation }\\[1cm]
@@ -55,25 +53,136 @@
 
 
 %%%%%%%% Page 1 %%%%%%%%
+\section*{Problem Statement} 
+A car engine parts manufacturer approaches you seeking a robotic automated solution for one of their problem in their loading and unloading station. The station receives three parts of the engine. The job of the station is to segregate the products and load it to the appropriate loading line. Your task is to design a flexible manufacturing cell (FMC) with robot centered layout for the above function. The design should handle the requirements below. 
+\begin{enumerate}
+    \item Ability to supply multiple vendors at the same time 
+    \item Fully automated solution from product in to out
+    \item Reduced queue in and out time
+    \item Flexible in terms of volume and mix product handling
+    \item Zero-defect product 
+\end{enumerate}
+
+Your solution must also take into account the practicalities like accessibility of robots and tools for maintenance, repair, and cleaning. Safety features like enclosures and a separate control station. Following the successful design and implementation of the simulation, you must also provide two reports: one including the technical implementation details and assumptions made in developing the simulation, and the other for the client to prove that your solution works and convince them it is a good idea to implement your solution. 
+\\[1cm]
+\emph{The solution can be implemented in four parts: Plant layout simulation, robot simulation, analysis and optimization of the cell and report generation. }
+
+\section*{Part 1: Plant layout design and Simulation} %6
+\begin{enumerate}
+    \item Import the parts model provided as mesh
+    \item Based on the size of the parts, setup the conveyors (4 in total, 1 in and 3 out)
+    \item Setup the floor shop like adding enclosures, modifying the visual aspects. 
+    \item Program the motion of the conveyor. 
+    \item Program the in conveyor to spawn one of the three parts in random (consecutive spawning of the same part is allowed too for a maximum of 2 iterations)
+\end{enumerate}
+
+\section*{Part 2: Robot Simulation} %15
+\begin{enumerate}
+    \item Based on your requirement of workspace from your previous setup, select a type of mechansim and formulate its DH/MDH parameters. (more workspace is better)
+    \item From your MDH parameters, draw the schematic representation.
+    \item Model necessary files in CAD and export it as OBJ [Or download from external resources]
+    \item Using OOPs strategy, assemble your mechanism in CoppeliaSim.
+    \item Choose an appropriate gripper for all three parts [Implement tool change if you prefer]
+    \item Implement the inverse kinematics using the built in simIk API
+    \item Implement Pick and place logic using trajectory planning. [Feel free to reuse the provided in the class material]
+    \item Extend the logic above to pick the part an place it in the right conveyor
+\end{enumerate}
+
+\section*{Part 3: Analysis and Optimization of the cell} %6
+From part 1 and 2, you should have a robot picking and placing the parts in their corresponding conveyor line. Now you have to analysis and optimize your cell such that all the requirements mentioned in the problem statement is validated. Feel free to make any choice but each and every choice must be detailed and justified. Before making them, develop a script/method to measure the time taken for the product in and out.
+
+Few hints on what is required for each requirement:
+\begin{enumerate}
+    \item Ability to supply multiple vendors at the same time:
+        \begin{itemize}
+            \item Ensure that the all three output conveyors have the same number of products
+            \item Adjust the speed of the conveyors and the routes to the delivery end
+        \end{itemize}
+    \item Fully automated solution:
+        \begin{itemize}
+            \item Ensure that there is no presence of human mannequins in the enclosed area.
+            \item Add enclosures to indicate no human passing area. 
+        \end{itemize}
+    \item Reduced queue in and out time:
+        \begin{itemize}
+            \item All modifications and optimizations added to the environment must directly relate to decrease in time taken for the product to enter the station and leaving the station.
+            \item Add enclosures to indicate no human passing area. 
+        \end{itemize}
+    \item Flexible in terms of volume and mix product handling:
+        \begin{itemize}
+            \item If the rate of number of items increase, how it will affect your solution and how will you manage it
+            \item If the parts are changes, how your solution will be able to adapt especially grasping the new product.
+        \end{itemize}
+    \item Zero-defect product:
+        \begin{itemize}
+            \item Using sensors make sure at the each conveyor out end that there are no wrong items. 
+        \end{itemize}
+\end{enumerate}
+
+These are only few hints, feel free to add any functionalities to meet the requirements.
+
+\section*{Part 4: Report Generation}
+Now that you have made a virtual prototype of your solution, its time to communicate the concepts of your solution. This will happen by preparing two different documents:
+\subsection*{Technical report}  %2
+This report must include detailed description of your solution. Explain each part in detail with necessary images. Part 1: Include the conveyor program logic and how you added the obj to the scene. Part 2: Explain your choice of mechanism, include the schematic diagram of your mechanism. Explain your logic of pick and place. Part 3: This is the most important part to report, for each requirement explain in detail why the choices were made and how it improved your solution. Include graphs and other necessary materials to prove your point.
+\subsection*{Client report} %1
+This is a one page report providing the stats and non technical information to convince the client that your solution meets the requirement. Nothing simulation related. Include information about the cost of robot and time taken to adapt the system. Just positives about your solution and why it should be implemented in their loading and unloading station.
+
+\section*{Links}
+Model of the engine parts: \\
+\url{https://unigeit.sharepoint.com/:f:/r/sites/FLEXIBLEAUTOMATION2021/Documenti\%20condivisi/ModelForSimulationAssignment?csf=1&web=1&e=B9YCQ1}
+
+% Link to Github page with the solution made during the class.
+
+% Link to this Latex template [if they want to reuse it]
+
+
+\newpage
 \section*{General Information}
 \subsection*{Evaluation}
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ Total & 30 \\
+ \hline
+ Part 1 & 4 \\ 
+ Part 2 & 15 \\
+ Part 3 & 6\\ 
+ Part 4 & 5 \\
+ \hline
+\end{tabular}
+\end{center}
 
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
+Note: 
+\begin{itemize}
+    \item If you cannot make your own mechanism, you can use any available model in CoppeliaSim at a penalty of 5 from your total.
+    \item If threaded scripts are used for inverse kinematics and trajectory planning, 10 points will be detected 
+    \item \textbf{Thus for part 2, if you use an existing model and threaded script, you will lose the entire 15 allocated for it}
+    \item The reports must be written in latex. If word or other software is used, 2 points will be reduced.
+    \item \textbf{For each day delay after 13 December 2021 23:59 CET, 1 point will be reduced}
+    \end{itemize}
+\end{tcolorbox}
 \subsection*{Submission Procedure}
-
-\subsection*{FAQ}
+\begin{itemize}
+    \item Create a repository inside the `SimulationAssignmentRepo' in the sharepoint shared with you for flexible automation. Naming convention: MatricolaWithoutS\_LastName, eg: 4287186\_Ikbal
+    \item In the repository created, upload the following:
+        \begin{enumerate}
+            \item Scene file (MatricolaWithoutS\_LastName\_Solution.ttt)
+            \item Video file (MatricolaWithoutS\_LastName\_DemoVideo.mp4)
+            \item Technical report (MatricolaWithoutS\_LastName\_TechnicalReport.pdf)
+            \item Client report (MatricolaWithoutS\_LastName\_ClientReport.pdf)
+        \end{enumerate}
+\end{itemize}
+%\subsection*{FAQ}
 
 \subsection*{Rules to Adhere}
-
-
-%%%%%%%% Page 2 %%%%%%%%
-\newpage
-\section*{Question 1}
-
-
-
-%%%%%%%% Page 3 %%%%%%%%
-\newpage
-\section*{Question 2}
+\begin{itemize}
+    \item No time extension will be awarded, for each day 1 point will be reduced. 
+    \item Students planning to take the next exam session will have to complete this assignment and have a compulsory oral exam to get scores for this assignment.
+    \item Apart for the above mentioned rules, few students will be randomly selected to attend the oral exam for this particular assignment. 
+\end{itemize}
 
 %%%%%%%% EXTRA TIPS %%%%%%%%
 %%\begin{figure}[H]
